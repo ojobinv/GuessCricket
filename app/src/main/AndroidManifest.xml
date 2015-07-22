@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gcrick.ovj.guesscricket" >
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="Guess Cricket"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".SinglePlayerActivity"
+            android:configChanges="orientation"
+            android:label="Single Player"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BowlerGame"
+            android:configChanges="orientation"
+            android:label="Blower Game"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BatsmanGame"
+            android:configChanges="orientation"
+            android:label="Batsman Game"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FirstActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MultiPlayerActivity"
+            android:configChanges="orientation"
+            android:label="title_activity_multi_player"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".DeviceListActivity"
+            android:label="@string/title_activity_device_list" >
+        </activity>
+        <activity
+            android:name=".SampleFragmentActivity"
+            android:label="@string/title_activity_sample_fragment" >
+        </activity>
+    </application>
+
+</manifest>
