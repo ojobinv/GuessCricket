@@ -225,11 +225,9 @@ public class MultiPlayerActivity extends Activity {
 
         public void manageServerConnection(BluetoothSocket bluetoothSocket){
             setContentView(R.layout.fragment_sample);
+            Fragment fragment = new SampleFragmentActivityFragment();
             FragmentManager fragmentManager = getFragmentManager();
-            SampleFragmentActivity samplefragment = new SampleFragmentActivity();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.fragmentHolder, samplefragment);
-            fragmentTransaction.commit();
+            fragmentManager.beginTransaction().replace(R.id.fragmentHolder, fragment).commit();
         }
 
         // Cancel the listening socket and terminate the thread
