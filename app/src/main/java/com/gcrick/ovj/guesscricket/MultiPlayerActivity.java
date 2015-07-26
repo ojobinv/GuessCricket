@@ -35,26 +35,22 @@ import java.util.UUID;
 
 public class MultiPlayerActivity extends Activity {
 
-    BluetoothAdapter mBluetoothAdapter;
-    private BluetoothSocket socket;
-    private InputStream is;
-    private OutputStreamWriter os;
-    private boolean CONTINUE_READ_WRITE = true;
-
-    private ListView listview;
-    private ArrayAdapter adapter;
-    private ArrayAdapter<String> mPairedDevicesArrayAdapter;
-    private ArrayAdapter<String> mNewDevicesArrayAdapter;
-
     private static final int ENABLE_BT_REQUEST_CODE = 1;
     private static final int DISCOVERABLE_BT_REQUEST_CODE = 2;
     private static final int REQUEST_DISCOVERING_DEVICE = 3;
     private static final int DISCOVERABLE_DURATION = 300;
-
+    BluetoothAdapter mBluetoothAdapter;
     UUID uuid = UUID.fromString("8c859610-27c5-4fca-93b4-88840f4fc520");
-
     Button hostGameButton;
     Button joinGameButton;
+    private BluetoothSocket socket;
+    private InputStream is;
+    private OutputStreamWriter os;
+    private boolean CONTINUE_READ_WRITE = true;
+    private ListView listview;
+    private ArrayAdapter adapter;
+    private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+    private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +97,9 @@ public class MultiPlayerActivity extends Activity {
 
     }
 
+    //As a server the device should turn on its Bluetooth discoverable and wait for a connection from client device.
+    //After turing on discoverable the device will go to a listening thread and starts listening for a client connection.
+    //On accepting a valid client connection the server can commence the game.
     public void server() {
         try {
             if (mBluetoothAdapter.getScanMode() !=
@@ -119,6 +118,10 @@ public class MultiPlayerActivity extends Activity {
     }
 
 
+    //As a client the device should start discovering available bluetooth devices nearby.
+    //List all the nearby devices.
+    //user will select the respective server device which commences the game.
+    //on selecting the device using a connection thread connect to the server device.
     public void client() {
 
         //setUpDeviceList();
@@ -172,6 +175,37 @@ public class MultiPlayerActivity extends Activity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_multi_player, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Make sure we're not doing discovery anymore
+        if (mBluetoothAdapter != null) {
+            mBluetoothAdapter.disable();
+        }
+    }
+
     private class ListeningThread extends Thread {
         private final BluetoothServerSocket bluetoothServerSocket;
 
@@ -187,7 +221,7 @@ public class MultiPlayerActivity extends Activity {
         }
 
         public void run() {
-            BluetoothSocket bluetoothSocket;
+             BluetoothSocket bluetoothSocket;
             // This will block while listening until a BluetoothSocket is returned
             // or an exception occurs
             while (true) {
@@ -198,19 +232,20 @@ public class MultiPlayerActivity extends Activity {
                 }
                 // If a connection is accepted
                 if (bluetoothSocket != null) {
-
-
+                    final BluetoothSocket bluetoothSocket2 = bluetoothSocket;
+                    Utilities.outPut("BluetoothServerSocket accepted a connection.");
                     runOnUiThread(new Runnable() {
                         public void run() {
                             Utilities.outPut("A connection has been accepted.");
                             Toast.makeText(getApplicationContext(), "A connection has been accepted.",
                                     Toast.LENGTH_SHORT).show();
+                            manageServerConnection(bluetoothSocket2);
                         }
                     });
 
                     // Code to manage the connection in a separate thread
 
-                       manageServerConnection(bluetoothSocket);
+                       //manageServerConnection(bluetoothSocket);
 
 
                     try {
@@ -297,38 +332,6 @@ public class MultiPlayerActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_multi_player, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // Make sure we're not doing discovery anymore
-        if (mBluetoothAdapter != null) {
-            mBluetoothAdapter.disable();
         }
     }
 }
