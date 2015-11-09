@@ -2,7 +2,6 @@ package com.gcrick.ovj.guesscricket;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +23,7 @@ public class FirstActivity extends Activity {
         singlePlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent singlePlayerIntent = new Intent(FirstActivity.this, SinglePlayerActivity.class);
                 FirstActivity.this.startActivity(singlePlayerIntent);
                 Utilities.outPut("Starting Single Player Activity..");
@@ -34,12 +34,31 @@ public class FirstActivity extends Activity {
         multiPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent multiPlayerIntent = new Intent(FirstActivity.this, MultiPlayerActivity.class);
-                FirstActivity.this.startActivity(multiPlayerIntent);
-                Utilities.outPut("Starting multi Player Activity..");
+                startMultiPlayer();
             }
         });
 
+    }
+
+    private void startMultiPlayer() {
+        setContentView(R.layout.multiplayer_chooser);
+        Button bluetoothChooserButton = (Button) findViewById(R.id.button_bluetooth);
+        Button wlanChooserButton = (Button) findViewById(R.id.button_wlan);
+        bluetoothChooserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent multiPlayerIntent = new Intent(FirstActivity.this, BluetoothMultiPlayerActivity.class);
+                FirstActivity.this.startActivity(multiPlayerIntent);
+                Utilities.outPut("Starting BlueTooth multi Player Activity..");
+            }
+        });
+
+        wlanChooserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -49,7 +68,7 @@ public class FirstActivity extends Activity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                         finish();
+                        finish();
                         //System.exit(0);
                     }
                 }).setNegativeButton("No", null).show();

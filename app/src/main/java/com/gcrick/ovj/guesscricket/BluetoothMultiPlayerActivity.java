@@ -3,37 +3,27 @@ package com.gcrick.ovj.guesscricket;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.Set;
 import java.util.UUID;
 
 
-public class MultiPlayerActivity extends Activity {
+public class BluetoothMultiPlayerActivity extends Activity {
 
     private static final int ENABLE_BT_REQUEST_CODE = 1;
     private static final int DISCOVERABLE_BT_REQUEST_CODE = 2;
@@ -63,8 +53,8 @@ public class MultiPlayerActivity extends Activity {
             if (mBluetoothAdapter == null) {
                 Toast.makeText(getApplicationContext(), "Your Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show();
                 Utilities.outPut("Device doesn't support Bluetooth");
-                Intent returnIntent = new Intent(MultiPlayerActivity.this, FirstActivity.class);
-                MultiPlayerActivity.this.startActivity(returnIntent);
+                Intent returnIntent = new Intent(BluetoothMultiPlayerActivity.this, FirstActivity.class);
+                BluetoothMultiPlayerActivity.this.startActivity(returnIntent);
                 Utilities.outPut("Returning to initial screen");
             }
             if (!mBluetoothAdapter.isEnabled()) {
@@ -208,7 +198,6 @@ public class MultiPlayerActivity extends Activity {
 
     private class ListeningThread extends Thread {
         private final BluetoothServerSocket bluetoothServerSocket;
-
         public ListeningThread() {
             BluetoothServerSocket temp = null;
             try {
