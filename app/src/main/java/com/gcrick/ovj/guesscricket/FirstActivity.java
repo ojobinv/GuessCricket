@@ -56,7 +56,9 @@ public class FirstActivity extends Activity {
         wlanChooserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent multiPlayerIntent = new Intent(FirstActivity.this, WifiMultiPlayerActivity.class);
+                FirstActivity.this.startActivity(multiPlayerIntent);
+                Utilities.outPut("Starting Wifi multi Player Activity..");
             }
         });
     }
